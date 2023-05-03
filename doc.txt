@@ -1,0 +1,3 @@
+core is the project file 
+home is the app
+api folder consist of all the api routes

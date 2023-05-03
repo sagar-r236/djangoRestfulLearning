@@ -1,0 +1,29 @@
+----------------------------------------
+  
+  API VIEW 
+
+----------------------------------------
+An api view is a decorator (@api_view()) which makes the view of the djagno to api view.
+
+To use this decorator we have to import it from rest_framework.decorators module
+
+to respond in the json format we use Response() class then we pass in our data
+
+Code Snippet:
+
+from rest_framework.decorators import api_view #importing api_view decorator
+from rest_framework.response import Response #importing Response class which we use to pass in our data 
+
+
+@api_view(['GET']) #pass in a http method which the view performs in the form of a list
+def index(request):
+    courses = {
+        'course_name' : 'Python',
+        'learn' : ['Flask', 'Django', 'Fast Api'],
+        'course_provider' : 'Someone'
+    }
+
+    return Response(courses)
+
+We use request object passed inside the view to determine what method the request is making.
+
