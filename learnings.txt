@@ -150,9 +150,42 @@ def validate(self, data):
             raise serializers.ValidationError('age should be greater than 18')
 return data
 
-after validating don't forget to return the data
+Note : after validating don't forget to return the data
 
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
+Serializing ForeignKey
 
+Suppose you have a foreign key and if you don't serialize what happens it when you consume the data what we get is an ID, therefore we have
+to serialize before consuming it.
+
+In the class Meta we can give depth=1 this will show all the fields of the foreign key. What if we have to serialize only specific fields
+in the foreign key then we have to write one more serializer which will help us to serialize foreign key data.
+
+Serializing foreign key:
+
+1. write one more serializing class for the foreign key
+2. create an object of foreign key serializer class inisde the serializer class which you have defined.
+
+that's it!
+
+Code Snippet:
+
+class ColorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Color
+        fields = ['color_name']
+        
+
+class PersonSerializer(serializers.ModelSerializer):
+    color = ColorSerializer() #look here we have created the foreign key serializer class object
+    class Meta:
+        model = models.Person
+        fields = "__all__"
+        depth = 1 #depth=1 is only given when we want all the fields of the foreign key
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
