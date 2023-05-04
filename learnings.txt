@@ -137,3 +137,22 @@ if it is a delete method:
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
+Validation in serializer class
+
+
+In the serializer class which we have defined we can define a function called validate() there using if condition we can validate if the condition is
+True we can raise an exception like serializer.ValidationError('write the errror')
+
+code Snippet:
+
+def validate(self, data):
+    if data['age'] < 18:
+            raise serializers.ValidationError('age should be greater than 18')
+return data
+
+after validating don't forget to return the data
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
