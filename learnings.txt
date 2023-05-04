@@ -27,3 +27,113 @@ def index(request):
 
 We use request object passed inside the view to determine what method the request is making.
 
+In order to access the data from the post request we use 'request.data'.
+In order to access the data from the get request we use 'request.GET'.
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
+Serializers : Serializers converts your queryset to json format and vice versa
+
+The most comman Serializers used in django rest_framework are:
+1. Serializers class
+2. ModelSerializer class
+
+
+ModelSerializer : Used to serialize the queryset
+
+In order serialize the model data what we have to do is to create a file called serializer.py, inside the file
+create a class which inherits the ModelSerializer inside the class which we have created we have create one more 
+class called Meta we have to give the the model which we have to serialize as well as the fields. 
+
+How to use ModelSerializer created?
+
+1. import the model Serializers which you have created to you view 
+After importing you have 2 options:
+1. to serialize the queryset
+2. to validate the data if it is a post request
+
+
+if it is a get request:
+2. You create a object of the model serializer which you have imported and pass the queryset. If the queryset has more than one object you
+give one key word arguement called many=True
+3. lets say you have created an object called obj, return the response with the object which you have create using a property called
+obj.data (this is will return the data) 
+
+Code Snippet:
+  if request.method == 'GET':
+        persons = Person.objects.all()
+        serializer = PersonSerializer(persons, many=True)
+        return Response(serializer.data)
+
+if it is a post method:
+2. Create an object say obj and pass the data which you have recieved from the post request with a keyword argument data=postdata
+use obj.is_valid() method to validate the data, obj.is_valid() method will return a boolean,if it is true use obj.save() to save the data 
+to database
+3. give back your response like that you have saved the data successfully
+
+Code Snippet:
+  if request.method == 'POST':
+        serializer = PersonSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'message' : 'Your data saved successfully'
+            })
+     
+        return Response(serializer.errors)
+
+
+difference between put and patch:
+
+put : we use this when we have to update all the fields.
+patch : we use this when only partial updation is necessary.
+
+if it is a put method:
+2. First try to get the object from the database
+3. create an object of serializer class pass in the object also data with keyword atribute data
+4. then using objects (serializer class) is_valid function check if the data is valid, if valid use serialized object save method to update
+and return the response
+
+Code Snippet:
+  if request.method == 'PUT':
+        data = request.data
+        person = Person.objects.get(id=data['id'])
+        serializer = PersonSerializer(person, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data
+            )
+        
+        return Response(serializer.errors)
+
+if it is patch method:
+2. First try to get the object from the database
+3. create an object of serializer class pass in the object also data with keyword atribute data, this time give one more argument while
+creating the object i.e partial=True since we are not providing all the values.
+4. then using objects (serializer class) is_valid function check if the data is valid, if valid use serialized object save method to update
+and return the response
+
+Code Snippet:
+
+  if request.method == 'PATCH':
+        data = request.data
+        person = Person.objects.get(id = data['id'])
+        print(person)
+        serializer = PersonSerializer(person, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors)
+
+
+if it is a delete method:
+2. First try to get the object from the database
+3. delete it using the object property
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
